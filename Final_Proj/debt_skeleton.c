@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #define MAX_DEBTS 100
 
@@ -184,23 +185,27 @@ void viewDebts(){
 	goBack();
 }
 
-void openFile(){
-	printf("Input file name:");
+void getFileName () {
+	printf("Input file name: ");
 	scanf("%s", inputFile);
-	strcat(fileName, inputFile);
-	strcat(fileName, ".txt");
+	snprintf(fileName, sizeof(fileName),"%s.txt", inputFile); // Safe string concatenation
 	printf("Your chosen file name is: %s\n", fileName);
+}
 
+void openFile(){
+	getFileName();
+
+	// Open file in Read/Write mode
 	FILE *file = fopen(fileName, "r+");
 	if (file == NULL) {
-		printf("File does not contain any Information");
+		printf("Failed to open file. It may not exist.");
 		return;
 	}
 
 	// Perform file operations here..
-	// Read anf Print every line till NULL
+	// Read and Print every line from the file
 	while ((fgets(readFile, sizeof(readFile), file)) != NULL) {
-		print("%s", readFile);
+		printf("%s", readFile);
 	}
 	// Close the file after reading
 	fclose(file);
@@ -219,15 +224,13 @@ void openFile(){
 }
 
 void addFile(){
-	printf("Input file name:");
-	scanf("%s", inputFile);
-	strcat(fileName, inputFile);
-	strcat(fileName, ".txt");
-	printf("Your chosen file name is: %s\n", fileName);
+	getFileName();
 
+	// Open file in Append mode (Creates file if it doesn't exist)
 	FILE *file = fopen(fileName, "a");
 	if (file == NULL) {
 		printf("Error creating file");
+		return;
 	}
 	
 	// Perform file operations here..
