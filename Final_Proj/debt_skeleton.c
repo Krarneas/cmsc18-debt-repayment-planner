@@ -17,6 +17,7 @@ rec debtRecords[MAX_DEBTS]; //array that stores individual debt info
 int debtCount = 0, i; 
 double income;
 FILE *file; 
+char readFile[1000];
 
 //to easily locate the file
 //change the fileName Path corresponding to your choice
@@ -195,7 +196,23 @@ void openFile(){
 		printf("File does not contain any Information");
 		return;
 	}
+
 	// Perform file operations here..
+	// Read anf Print every line till NULL
+	while ((fgets(readFile, sizeof(readFile), file)) != NULL) {
+		print("%s", readFile);
+	}
+	// Close the file after reading
+	fclose(file);
+
+	// Reopen file in Append mode to add new data
+	file = fopen(fileName, "a");
+	if (file == NULL) {
+		printf("Error opening file for appending");
+		return;
+	}
+
+	// Append shit here..
 
 	// Close the file
 	fclose(file);
@@ -209,6 +226,9 @@ void addFile(){
 	printf("Your chosen file name is: %s\n", fileName);
 
 	FILE *file = fopen(fileName, "a");
+	if (file == NULL) {
+		printf("Error creating file");
+	}
 	
 	// Perform file operations here..
 
