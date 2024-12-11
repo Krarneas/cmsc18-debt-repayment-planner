@@ -21,6 +21,7 @@ double income;
 FILE *file; 
 char readFile[1000];
 
+
 //to easily locate the file
 //change the fileName Path corresponding to your Device Location Choice
 char fileName[100] = {"C:\\Users\\Infinite\\Desktop\\"};
@@ -137,19 +138,15 @@ void addDebt(){
     
     // Reading the debt title (with spaces)
     printf("Debt Title: ");
-    fgets(debt.title, 100, stdin);
+    fgets(debt.title, sizeof(debt.title), stdin);
     
-    // Remove the trailing newline character if it exists
-    size_t len = strlen(debt.title);
-    if (len > 0 && debt.title[len - 1] == '\n') {
-        debt.title[len - 1] = '\0';
-    }
+    debt.title[strcspn(debt.title, "\n")] = '\0'; // Remove newline
 	
 	printf("Debt Amount: ");
 	scanf(" %lf", &debt.amount);
-	printf("Interest Rate: ");
+	printf("Interest Rate (%%): ");
 	scanf(" %lf", &debt.intRate);
-	printf("Amount of payment(per Month): ");
+	printf("Amount of payment (per Month): ");
 	scanf(" %lf", &debt.minPayment);
 	
 	//Adding Debt info in the global array
@@ -175,8 +172,56 @@ void viewDebts(){
 		printf("DEBT NO. %d\n", i + 1);
 		printf("Debt Title: %s\n", debtRecords[i].title);
 		printf("Debt Amount: Php %.2lf\n", debtRecords[i].amount);
-		printf("Interest Rate: %.2lf%%\n", debtRecords[i].intRate * 100);
-		printf("Amount of payment(per Month): %.2lf\n\n", debtRecords[i].minPayment);
+		printf("Interest Rate (%%): %.2lf%%\n", debtRecords[i].intRate);
+		printf("Amount of payment (per Month): Php %.2lf\n\n", debtRecords[i].minPayment);
+	}
+	
+	yellow();
+	printf("---END OF LIST---");
+	reset();
+	
+	goBack();
+}
+
+void calculateRepaymentPlan(){
+	double totalDebt = 0.0, totalInt = 0.0; 
+	
+	yellow();
+	printf("REPAYMENT PLAN\n");
+	reset();
+	
+	for (i = 0; i < debtCount; i++){
+		printf("DEBT NO. %d - %s\n", i + 1, debtRecords[i].title);
+		printf("Debt Initial Amount: %.2lf\n", debtRecords[i].amount);
+		
+		double balance = debtRecords[i].amount;
+		double monthlyInt = debtRecords[i].intRate / 12 / 100; //Divide in how many months, then convert to decimal
+		int months = 0;
+		double totalDebtInt = 0.0;
+		
+		while (balance > 0) {
+            // Calculate interest on the current balance (compound interest)
+            double interest = balance * monthlyInt;
+            totalDebtInt += interest;
+
+            // Ensure the payment is enough to cover interest and part of the balance
+            double payment = (balance + interest < debtRecords[i].minPayment) ? (balance + interest) : debtRecords[i].minPayment;
+
+            if (payment <= interest) {
+                printf("Warning: Insufficient payment to cover interest. Debt will grow!\n");
+                break;
+            }
+
+            // Update balance by adding interest, then subtracting the payment
+            balance = balance + interest - payment;
+            months++;
+        }
+        
+        totalInt += totalDebtInt;
+        totalDebt += debtRecords[i].amount;
+        
+        printf("Time to Payoff: %d months\n", months);
+        printf("Total Interest Paid: $%.2f\n\n", totalDebtInt);
 	}
 	
 	yellow();
@@ -304,7 +349,7 @@ int main(){
                 break;
             case 4:
                 system("cls");
-                //view repayment plan function
+                calculateRepaymentPlan();
                 break;
             case 5:
             	system("cls");
