@@ -209,15 +209,12 @@ void addFile(){
 	printf("Your chosen file name is: %s\n", fileName);
 
 	FILE *file = fopen(fileName, "a");
-	if (file == NULL) {
-		printf("File does not contain any Information");
-		return;
-	}
+	
 	// Perform file operations here..
 
 	// Close the file
 	fclose(file);
-}
+}  
 
 //MAIN PROGRAM
 int main(){
