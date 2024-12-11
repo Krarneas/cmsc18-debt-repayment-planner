@@ -21,7 +21,7 @@ FILE *file;
 char readFile[1000];
 
 //to easily locate the file
-//change the fileName Path corresponding to your choice
+//change the fileName Path corresponding to your Device Location Choice
 char fileName[100] = {"C:\\Users\\Infinite\\Desktop\\"};
 char inputFile[50];
 
@@ -192,6 +192,7 @@ void getFileName () {
 	printf("Your chosen file name is: %s\n", fileName);
 }
 
+// Open Existing File
 void openFile(){
 	getFileName();
 
@@ -201,7 +202,7 @@ void openFile(){
 		printf("Failed to open file. It may not exist.");
 		return;
 	}
-
+	  
 	// Perform file operations here..
 	// Read and Print every line from the file
 	while ((fgets(readFile, sizeof(readFile), file)) != NULL) {
@@ -223,6 +224,7 @@ void openFile(){
 	fclose(file);
 }
 
+// Create New File
 void addFile(){
 	getFileName();
 
