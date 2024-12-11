@@ -46,7 +46,7 @@ void mainMenu(){
 	yellow();
 	printf("WELCOME TO DEBT REPAYMENT PLANNER!\n");
 	reset();
-	printf("\t[1] View Existing File\n");
+	printf("\t[1] Open Existing File\n");
 	printf("\t[2] Create New File\n");
 	printf("\t[0] Exit Program\n");
 }
