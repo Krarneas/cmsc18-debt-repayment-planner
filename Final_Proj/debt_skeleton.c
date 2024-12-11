@@ -5,6 +5,11 @@
 
 #define MAX_DEBTS 100
 
+
+
+
+
+
 //store debt info/details
 typedef struct Record{
 	char title[50]; //debt title
