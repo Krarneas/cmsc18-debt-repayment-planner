@@ -14,7 +14,7 @@ typedef struct Record{
 
 //GLOBALS
 rec debtRecords[MAX_DEBTS]; //array that stores individual debt info
-int debtCount = 0; 
+int debtCount = 0, i; 
 double income;
 FILE *file; 
 
@@ -163,7 +163,7 @@ void viewDebts(){
 	}
 	
 	//will display all debts (ATM)
-	for (int i = 0; i < debtCount; i++){
+	for (i = 0; i < debtCount; i++){
 		printf("DEBT NO. %d\n", i + 1);
 		printf("Debt Title: %s\n", debtRecords[i].title);
 		printf("Debt Amount: Php %.2lf\n", debtRecords[i].amount);
