@@ -6,10 +6,6 @@
 #define MAX_DEBTS 100
 
 
-
-
-
-
 //store debt info/details
 typedef struct Record{
 	char title[50]; //debt title
@@ -66,11 +62,11 @@ void mainMenu(){
 //DISPLAYS PROGRAM PROPER
 void secondMenu(){
 	printf("DEBT REPAYMENT PLANNER\n");
-	printf("\t[1] Add Monthly Income\n");
+	printf("\t[1] Input Monthly Income\n");
 	printf("\t[2] Add Debt Details\n");
 	printf("\t[3] View All Debts\n");
 	printf("\t[4] View Repayment Plan\n");
-	printf("\t[5] Upcoming Payment Deadlines\n");
+	printf("\t[5] Change Debt Information\n");
 	printf("\t[6] Save File\n");
 	printf("\t[0] Back to Menu\n");
 }
@@ -223,7 +219,7 @@ void openFile(){
 		return;
 	}
 
-	// Append shit here..
+	// Append here..
 
 	// Close the file
 	fclose(file);
