@@ -18,6 +18,11 @@ int debtCount = 0, i;
 double income;
 FILE *file; 
 
+//to easily locate the file
+//change the fileName Path corresponding to your choice
+char fileName[100] = {"C:\\Users\\Infinite\\Desktop\\"};
+char inputFile[50];
+
 //FOR TEXT COLORS
 void red () {
 	printf("\033[0;31m");
@@ -178,6 +183,42 @@ void viewDebts(){
 	goBack();
 }
 
+void openFile(){
+	printf("Input file name:");
+	scanf("%s", inputFile);
+	strcat(fileName, inputFile);
+	strcat(fileName, ".txt");
+	printf("Your chosen file name is: %s\n", fileName);
+
+	FILE *file = fopen(fileName, "r+");
+	if (file == NULL) {
+		printf("File does not contain any Information");
+		return;
+	}
+	// Perform file operations here..
+
+	// Close the file
+	fclose(file);
+}
+
+void addFile(){
+	printf("Input file name:");
+	scanf("%s", inputFile);
+	strcat(fileName, inputFile);
+	strcat(fileName, ".txt");
+	printf("Your chosen file name is: %s\n", fileName);
+
+	FILE *file = fopen(fileName, "a");
+	if (file == NULL) {
+		printf("File does not contain any Information");
+		return;
+	}
+	// Perform file operations here..
+
+	// Close the file
+	fclose(file);
+}
+
 //MAIN PROGRAM
 int main(){
 	int choice;
@@ -190,11 +231,12 @@ int main(){
 		
 		//NOTE: make a file folder dedicated for debt details
 		switch (choice) {
-			//VIEW EXISTING FILE
+			//OPEN EXISTING FILE
 			case 1:
 				system("cls");
 				//file = fopen("name of file", "mode (r/w/rw/a)");
 				goto SecondMenu;
+			//CREATE NEW FILE
 			case 2:
 				system("cls");	
 				goto SecondMenu;
