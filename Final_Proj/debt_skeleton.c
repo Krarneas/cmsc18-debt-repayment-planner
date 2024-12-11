@@ -9,7 +9,7 @@ typedef struct Record{
 	char title[50]; //debt title
 	double amount; //debt amount, how much is the debt
 	double intRate; //interest rate, per month?
-	int timeToPayOff; //how many months are you willing to pay your debt 
+	double minPayment; //how much you are willing to pay your debt 
 } rec;
 
 //GLOBALS
@@ -141,8 +141,8 @@ void addDebt(){
 	scanf(" %lf", &debt.amount);
 	printf("Interest Rate: ");
 	scanf(" %lf", &debt.intRate);
-	printf("Duration of Payment (in months): ");
-	scanf(" %d", &debt.timeToPayOff);
+	printf("Amount of payment(per Month): ");
+	scanf(" %lf", &debt.minPayment);
 	
 	//Adding Debt info in the global array
 	debtRecords[debtCount++] = debt;
@@ -168,7 +168,7 @@ void viewDebts(){
 		printf("Debt Title: %s\n", debtRecords[i].title);
 		printf("Debt Amount: Php %.2lf\n", debtRecords[i].amount);
 		printf("Interest Rate: %.2lf%%\n", debtRecords[i].intRate * 100);
-		printf("Duration of Payment: %d month(s)\n\n", debtRecords[i].timeToPayOff);
+		printf("Amount of payment(per Month): %.2lf\n\n", debtRecords[i].minPayment);
 	}
 	
 	yellow();
@@ -267,5 +267,4 @@ int main(){
         }
     } 
 	while (1); 
-    
 }
