@@ -14,18 +14,20 @@ typedef struct Record{
 	double minPayment; //how much you are willing to pay your debt 
 } rec;
 
+
+
 //GLOBALS
 rec debtRecords[MAX_DEBTS]; //array that stores individual debt info
 int debtCount = 0, i; 
 double income;
 FILE *file; 
 char readFile[1000];
-
-
 //to easily locate the file
 //change the fileName Path corresponding to your Device Location Choice
 char fileName[100] = {"C:\\Users\\Infinite\\Desktop\\"};
 char inputFile[50];
+
+
 
 //FOR TEXT COLORS
 void red () {
@@ -41,6 +43,8 @@ void reset () {
   printf("\033[0m");
 }
 
+
+
 //GOES BACK TO MAIN SCREEN
 void goBack(){
 	yellow();
@@ -49,6 +53,8 @@ void goBack(){
  	_getch();
     system("cls");
 }
+
+
 
 //DISPLAYS EXISTING DATA SCREEN (MAIN MENU)
 void mainMenu(){
@@ -59,6 +65,8 @@ void mainMenu(){
 	printf("\t[2] Create New File\n");
 	printf("\t[0] Exit Program\n");
 }
+
+
 
 //DISPLAYS PROGRAM PROPER
 void secondMenu(){
@@ -71,6 +79,8 @@ void secondMenu(){
 	printf("\t[6] Save File\n");
 	printf("\t[0] Back to Menu\n");
 }
+
+
 
 //ERROR CATCHING FOR CHARACTER INPUTS (MAIN MENU)
 int readInteger() {
@@ -93,6 +103,9 @@ int readInteger() {
         }
     }
 }
+
+
+
 
 //ERROR CATCHING FOR CHARACTER INPUTS (SECOND MENU)
 int readInteger2() {
@@ -117,6 +130,7 @@ int readInteger2() {
 }
 
 
+//FUNCTION TO INPUT THE MONTHLY INCOME
 void monthlyIncome(){
 	printf("Enter your Monthly Income: ");
 	scanf("%lf", &income);
@@ -128,6 +142,9 @@ void monthlyIncome(){
 	goBack();
 }
 
+
+
+//FUNCTION FOR ADDING DEBT
 void addDebt(){
 	rec debt;
 	
@@ -159,6 +176,8 @@ void addDebt(){
 	goBack();	
 }
 
+
+// FUNCTION FOR VEIWING DEBT DATA
 void viewDebts(){
 	if (debtCount == 0){
 		red();
@@ -183,6 +202,9 @@ void viewDebts(){
 	goBack();
 }
 
+
+
+// FUNCTION FOR THE REPAYMENT PLAN
 void calculateRepaymentPlan(){
 	double totalDebt = 0.0, totalInt = 0.0, allInt = 0.0, monthlyPayment = 0.0; 
 	
@@ -240,6 +262,54 @@ void calculateRepaymentPlan(){
 	
 	goBack();
 }
+
+
+
+// FUCTION FOR CHANGING DEBT INFORMATION
+void changeDebtDetails() {
+    char searchTitle[50];
+    int found = 0;
+
+    // Prompt user for the debt title to search
+    printf("Enter the Debt Title to change: ");
+    fgets(searchTitle, sizeof(searchTitle), stdin);
+    searchTitle[strcspn(searchTitle, "\n")] = '\0'; // Remove newline
+
+    // Search for the debt in the records
+    for (i = 0; i < debtCount; i++) {
+        if (strcmp(debtRecords[i].title, searchTitle) == 0) {
+            found = 1; // Debt found
+            printf("Current details for '%s':\n", debtRecords[i].title);
+            printf("Debt Amount: Php %.2lf\n", debtRecords[i].amount);
+            printf("Interest Rate (%%): %.2lf%%\n", debtRecords[i].intRate);
+            printf("Amount of payment (per Month): Php %.2lf\n", debtRecords[i].minPayment);
+
+            // Prompt user for new details
+            printf("\n\nEnter new Debt Amount: ");
+            scanf(" %lf", &debtRecords[i].amount);
+            printf("Enter new Interest Rate (%%): ");
+            scanf(" %lf", &debtRecords[i].intRate);
+            printf("Enter new Amount of payment (per Month): ");
+            scanf(" %lf", &debtRecords[i].minPayment);
+
+            green();
+            printf("Debt details updated successfully!\n");
+            reset();
+            break; // Exit the loop after updating
+        }
+    }
+
+    if (!found) {
+        red();
+        printf("Debt with title '%s' not found.\n", searchTitle);
+        reset();
+    }
+
+    goBack();
+}
+
+
+
 
 void getFileName () {
 	printf("Input file name: ");
@@ -362,10 +432,9 @@ int main(){
                 calculateRepaymentPlan();
                 break;
             case 5:
-            	system("cls");
-            	//upcoming payment deadlines function
-            	//hierarchical order (largest interest to lowest)
-            	break;
+				system("cls");
+				changeDebtDetails();
+				break;
             case 6:
             	system("cls");
             	//Save file
