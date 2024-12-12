@@ -184,7 +184,7 @@ void viewDebts(){
 }
 
 void calculateRepaymentPlan(){
-	double totalDebt = 0.0, totalInt = 0.0; 
+	double totalDebt = 0.0, totalInt = 0.0, allInt = 0.0, monthlyPayment = 0.0; 
 	
 	yellow();
 	printf("REPAYMENT PLAN\n");
@@ -193,16 +193,19 @@ void calculateRepaymentPlan(){
 	for (i = 0; i < debtCount; i++){
 		printf("DEBT NO. %d - %s\n", i + 1, debtRecords[i].title);
 		printf("Debt Initial Amount: %.2lf\n", debtRecords[i].amount);
+		printf("Amount of payment (per Month): Php %.2lf\n\n", debtRecords[i].minPayment);
 		
 		double balance = debtRecords[i].amount;
 		double monthlyInt = debtRecords[i].intRate / 12 / 100; //Divide in how many months, then convert to decimal
 		int months = 0;
 		double totalDebtInt = 0.0;
+		monthlyPayment += debtRecords[i].minPayment;
 		
 		while (balance > 0) {
             // Calculate interest on the current balance (compound interest)
             double interest = balance * monthlyInt;
             totalDebtInt += interest;
+			allInt += interest;
 
             // Ensure the payment is enough to cover interest and part of the balance
             double payment = (balance + interest < debtRecords[i].minPayment) ? (balance + interest) : debtRecords[i].minPayment;
@@ -224,6 +227,13 @@ void calculateRepaymentPlan(){
         printf("Total Interest Paid: $%.2f\n\n", totalDebtInt);
 	}
 	
+	red();
+	printf("The Total Interest: $%.2f\n", allInt);
+	reset();
+	green();
+	printf("Monthly Income After Paying Monthly Debt: $%.2f\n\n\n", income - monthlyPayment);
+	reset();
+
 	yellow();
 	printf("---END OF LIST---");
 	reset();
