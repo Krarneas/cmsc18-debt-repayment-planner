@@ -17,14 +17,12 @@ typedef struct Record{
 
 
 //GLOBALS
-rec debtRecords[MAX_DEBTS]; //array that stores individual debt info
+rec* debtRecords = NULL; // Pointer for dynamic array of debt records, dynamic array that stores individual debt info
 int debtCount = 0, i; 
 double income;
 FILE *file; 
 char readFile[1000];
-//to easily locate the file
-//change the fileName Path corresponding to your Device Location Choice
-char fileName[100] = {"C:\\Users\\Infinite\\Desktop\\"};
+char fileName[100];
 char inputFile[50];
 
 
@@ -246,14 +244,14 @@ void calculateRepaymentPlan(){
         totalDebt += debtRecords[i].amount;
         
         printf("Time to Payoff: %d months\n", months);
-        printf("Total Interest Paid: $%.2f\n\n", totalDebtInt);
+        printf("Total Interest Paid: Php %.2f\n\n", totalDebtInt);
 	}
 	
 	red();
-	printf("The Total Interest: $%.2f\n", allInt);
+	printf("The Total Interest: Php %.2f\n", allInt);
 	reset();
 	green();
-	printf("Monthly Income After Paying Monthly Debt: $%.2f\n\n\n", income - monthlyPayment);
+	printf("Monthly Income After Paying Monthly Debt: Php %.2f\n\n\n", income - monthlyPayment);
 	reset();
 
 	yellow();
@@ -309,8 +307,7 @@ void changeDebtDetails() {
 }
 
 
-
-
+//FOR FILE HANDLING
 void getFileName () {
 	printf("Input file name: ");
 	scanf("%s", inputFile);
@@ -319,56 +316,120 @@ void getFileName () {
 }
 
 // Open Existing File
-void openFile(){
+int openFile(){
 	getFileName();
 
 	// Open file in Read/Write mode
-	FILE *file = fopen(fileName, "r+");
+	file = fopen(fileName, "r+");
 	if (file == NULL) {
-		printf("Failed to open file. It may not exist.");
-		return;
+		red();
+		printf("Failed to open file. It may not exist.\n");
+		reset();
+		return 1;
 	}
 	  
-	// Perform file operations here..
-	// Read and Print every line from the file
-	while ((fgets(readFile, sizeof(readFile), file)) != NULL) {
-		printf("%s", readFile);
+	//Perform file operations here..
+	//READ THE DATA FROM THE EXISTING FILE
+	//Read first monthly income
+	if (fscanf(file, "%lf", &income) != 1){
+		red();
+        printf("\nError: Failed to read monthly income from the file.\n");
+        reset();
+        fclose(file);
+        return 1;
 	}
+	
+	//Then debt details
+	while (fscanf(file, " %[^\n] %lf %lf %lf", 
+              debtRecords[debtCount].title, 
+              &debtRecords[debtCount].amount, 
+              &debtRecords[debtCount].intRate, 
+              &debtRecords[debtCount].minPayment) == 4) {
+	    debtCount++;
+	    if (debtCount >= MAX_DEBTS) {
+	        printf("Reached maximum debt limit.\n");
+	        break;
+	    }
+	}
+	
 	// Close the file after reading
 	fclose(file);
 
-	// Reopen file in Append mode to add new data
-	file = fopen(fileName, "a");
-	if (file == NULL) {
-		printf("Error opening file for appending");
-		return;
-	}
-
-	// Append here..
-
-	// Close the file
-	fclose(file);
+//	// Reopen file in Append mode to add new data
+//	file = fopen(fileName, "a");
+//	if (file == NULL) {
+//		printf("Error opening file for appending");
+//		return;
+//	}
+//
+//	// Append here..
+//	
+//
+//
+//	// Close the file
+//	fclose(file);
 }
 
-// Create New File
-void addFile(){
-	getFileName();
 
-	// Open file in Append mode (Creates file if it doesn't exist)
-	FILE *file = fopen(fileName, "a");
-	if (file == NULL) {
-		printf("Error creating file");
-		return;
-	}
-	
-	// Perform file operations here..
+//Saves the current file to the specified text file
+void saveFile() {
+    file = fopen(fileName, "w");
+    if (file == NULL) {
+        red();
+        printf("Error opening file for saving.\n");
+        reset();
+        return;
+    }
 
-	// Close the file
-	fclose(file);
-}  
+    // Write the monthly income to the file
+    fprintf(file, "%.2f\n\n", income);
+
+    // Write each debt record to the file
+    for (i = 0; i < debtCount; i++) {
+        fprintf(file, "%s\n%.2f\n%.2f\n%.2f\n\n", 
+                debtRecords[i].title, 
+                debtRecords[i].amount, 
+                debtRecords[i].intRate, 
+                debtRecords[i].minPayment);
+    }
+
+    fclose(file);
+}
+
+//FOR LOADINGS (for the aesthetics)
+void loadAnimation(){
+    printf("Saving File");
+    fflush(stdout); // Ensure the output is printed immediately
+    for (int i = 0; i < 3; i++) {
+        printf(". ");
+	    fflush(stdout);
+	    sleep(1);
+    }
+    green();
+    printf("\nFile Saved Successfully!\n");
+    reset();
+}
+
+//MEMORY CLEAR
+void cleanup() {
+    if (debtRecords != NULL) {
+        free(debtRecords);
+        debtRecords = NULL; 
+        debtCount = 0; // Reset count
+    }
+}
 
 //MAIN PROGRAM
 int main(){
+	// Dynamically allocate memory for debtRecords
+    debtRecords = malloc(MAX_DEBTS * sizeof(rec));
+    if (debtRecords == NULL) {
+        red();
+        printf("ERROR: Memory allocation failed.\n");
+        reset();
+        return 1;
+    }
+	
 	int choice;
 	Menu:
 	do{
@@ -383,10 +444,22 @@ int main(){
 			case 1:
 				system("cls");
 				//file = fopen("name of file", "mode (r/w/rw/a)");
-				goto SecondMenu;
+				if (openFile() != 1){
+					sleep(2.5);
+                	system("cls");
+					goto SecondMenu;
+				}
+				else{
+					sleep(2.5);
+                	system("cls");
+					goto Menu;
+				}
 			//CREATE NEW FILE
 			case 2:
-				system("cls");	
+				system("cls");
+				getFileName();
+				sleep(2.5);
+                system("cls");	
 				goto SecondMenu;
 			//EXIT PROGRAM
 			case 0:
@@ -437,7 +510,10 @@ int main(){
 				break;
             case 6:
             	system("cls");
-            	//Save file
+            	saveFile();
+            	loadAnimation();
+			    sleep(2.5);
+			    system("cls");
             	break;
             case 0:
             	yellow();
@@ -445,6 +521,14 @@ int main(){
                 reset();
                 sleep(1.5);
                 system("cls");
+                cleanup(); // Free memory
+			    debtRecords = malloc(MAX_DEBTS * sizeof(rec)); // Reallocate memory
+			    if (debtRecords == NULL) {
+			        red();
+			        printf("ERROR: Memory allocation failed.\n");
+			        reset();
+			        exit(1); // Exit the program if memory allocation fails
+			    }
                 goto Menu;
                 break;
             default:
