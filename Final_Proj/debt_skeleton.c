@@ -75,6 +75,7 @@ void secondMenu(){
 	printf("\t[4] View Repayment Plan\n");
 	printf("\t[5] Change Debt Information\n");
 	printf("\t[6] Save File\n");
+	printf("\t[7] Delete Debt\n");
 	printf("\t[0] Back to Menu\n");
 }
 
@@ -396,6 +397,42 @@ void saveFile() {
     fclose(file);
 }
 
+
+// 	FUNCTION TO DELETE DEBT BASED ON NAME
+void deleteDebt() {
+    char searchTitle[50];
+    int found = 0;
+
+    // Prompt user for the debt title to delete
+    printf("Enter the Debt Title to delete: ");
+    fgets(searchTitle, sizeof(searchTitle), stdin);
+    searchTitle[strcspn(searchTitle, "\n")] = '\0'; // Remove newline
+
+    // Search for the debt in the records
+    for (i = 0; i < debtCount; i++) {
+        if (strcmp(debtRecords[i].title, searchTitle) == 0) {
+            found = 1; // Debt found
+            // Shift records down to remove the debt
+            for (int j = i; j < debtCount - 1; j++) {
+                debtRecords[j] = debtRecords[j + 1];
+            }
+            debtCount--; // Decrease the count of debts
+            green();
+            printf("Debt '%s' has been deleted successfully!\n", searchTitle);
+            reset();
+            break; // Exit the loop after deleting
+        }
+    }
+
+    if (!found) {
+        red();
+        printf("Debt with title '%s' not found.\n", searchTitle);
+        reset();
+    }
+
+    goBack();
+}
+
 //FOR LOADINGS (for the aesthetics)
 void loadAnimation(){
     printf("Saving File");
@@ -515,6 +552,10 @@ int main(){
 			    sleep(2.5);
 			    system("cls");
             	break;
+			case 7:
+				system("cls");
+				deleteDebt();
+				break;
             case 0:
             	yellow();
                 printf("Going Back to Main Menu.\n");
