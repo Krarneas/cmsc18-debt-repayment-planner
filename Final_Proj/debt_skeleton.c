@@ -10,15 +10,15 @@
 typedef struct Record{
 	char title[50]; //debt title
 	double amount; //debt amount, how much is the debt
-	double intRate; //interest rate, per month?
-	double minPayment; //how much you are willing to pay your debt 
+	double intRate; //annual interest rate
+	double minPayment; //how much you are willing to pay your debt per month
 } rec;
 
 
 
 //GLOBALS
 rec* debtRecords = NULL; // Pointer for dynamic array of debt records, dynamic array that stores individual debt info
-int debtCount = 0, i; 
+int debtCount = 0, i, j; 
 double income;
 FILE *file; 
 char readFile[1000];
@@ -218,7 +218,7 @@ void calculateRepaymentPlan(){
 		
 		double balance = debtRecords[i].amount;
 		double monthlyInt = debtRecords[i].intRate / 12 / 100; //Divide in how many months, then convert to decimal
-		int months = 0;
+		int months = 0, year = 0;
 		double totalDebtInt = 0.0;
 		monthlyPayment += debtRecords[i].minPayment;
 		
@@ -244,7 +244,10 @@ void calculateRepaymentPlan(){
         totalInt += totalDebtInt;
         totalDebt += debtRecords[i].amount;
         
-        printf("Time to Payoff: %d months\n", months);
+        year = months/12;
+        months = months % 12;
+        
+        printf("Time to Payoff: %d years and %d months\n", year, months);
         printf("Total Interest Paid: Php %.2f\n\n", totalDebtInt);
 	}
 	
@@ -413,7 +416,7 @@ void deleteDebt() {
         if (strcmp(debtRecords[i].title, searchTitle) == 0) {
             found = 1; // Debt found
             // Shift records down to remove the debt
-            for (int j = i; j < debtCount - 1; j++) {
+            for (j = i; j < debtCount - 1; j++) {
                 debtRecords[j] = debtRecords[j + 1];
             }
             debtCount--; // Decrease the count of debts
@@ -437,7 +440,7 @@ void deleteDebt() {
 void loadAnimation(){
     printf("Saving File");
     fflush(stdout); // Ensure the output is printed immediately
-    for (int i = 0; i < 3; i++) {
+    for ( i = 0; i < 3; i++) {
         printf(". ");
 	    fflush(stdout);
 	    sleep(1);
