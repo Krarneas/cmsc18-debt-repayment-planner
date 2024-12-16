@@ -149,8 +149,6 @@ void addDebt(){
 	
 	//Getting debt info
 	printf("INPUT DEBT DETAILS\n");
-	
-	//getchar();  // This reads the stray newline character from the buffer
     
     // Reading the debt title (with spaces)
     printf("Debt Title: ");
@@ -332,7 +330,7 @@ int openFile(){
 		return 1;
 	}
 	  
-	//Perform file operations here..
+
 	//READ THE DATA FROM THE EXISTING FILE
 	//Read first monthly income
 	if (fscanf(file, "%lf", &income) != 1){
@@ -359,19 +357,6 @@ int openFile(){
 	// Close the file after reading
 	fclose(file);
 
-//	// Reopen file in Append mode to add new data
-//	file = fopen(fileName, "a");
-//	if (file == NULL) {
-//		printf("Error opening file for appending");
-//		return;
-//	}
-//
-//	// Append here..
-//	
-//
-//
-//	// Close the file
-//	fclose(file);
 }
 
 
@@ -483,7 +468,6 @@ int main(){
 			//OPEN EXISTING FILE
 			case 1:
 				system("cls");
-				//file = fopen("name of file", "mode (r/w/rw/a)");
 				if (openFile() != 1){
 					sleep(2.5);
                 	system("cls");
