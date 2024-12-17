@@ -79,8 +79,6 @@ void secondMenu(){
 	printf("\t[0] Back to Menu\n");
 }
 
-
-
 //ERROR CATCHING FOR CHARACTER INPUTS (MAIN MENU)
 int readInteger() {
     int value;
@@ -129,10 +127,50 @@ int readInteger2() {
 }
 
 
+//ERROR CATCHING
+int readInteger3() {
+    char input[100]; // Buffer to hold the input
+    int value;
+
+    while (1) {
+        printf("Enter your Monthly Income: "); // Prompt for input
+        if (fgets(input, sizeof(input), stdin) != NULL) {
+            // Remove newline character if present
+            input[strcspn(input, "\n")] = 0;
+
+            // Check if the input is numeric
+            int isValid = 1; // Flag to check validity
+            for (i = 0; input[i] != '\0'; i++) {
+                if (!isdigit(input[i])) {
+                    isValid = 0; // Set flag to false if a non-digit is found
+                    break;
+                }
+            }
+
+            if (isValid) {
+                value = atoi(input); // Convert string to integer
+                return value; // Return the valid integer
+            } else {
+                red(); 
+                printf("Invalid Input! Try again.\n");
+                reset(); 
+                sleep(1.5); // Use Sleep(1500) for Windows
+            }
+        } else {
+            // Handle input error
+            red();
+            printf("Error reading input! Try again.\n");
+            reset();
+            sleep(1.5);
+            system("cls");
+        }
+    }
+}
+
+
 //FUNCTION TO INPUT THE MONTHLY INCOME
 void monthlyIncome(){
-	printf("Enter your Monthly Income: ");
-	scanf("%lf", &income);
+	income = readInteger3();
 	
 	green();
 	printf("\nMonthly Income has been saved successfully!\n");
@@ -482,8 +520,17 @@ int main(){
 			case 2:
 				system("cls");
 				getFileName();
-				sleep(2.5);
-                system("cls");	
+                file = fopen(fileName, "r+");
+	                if (file != NULL) {
+                        red();
+                        printf("File Already Exist... Try Again\n");
+                        reset();
+                        sleep(2.5);	
+                        system("cls");
+                        break;
+                    }
+                sleep(2.5);	
+                system("cls");
 				goto SecondMenu;
 			//EXIT PROGRAM
 			case 0:
