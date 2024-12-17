@@ -69,7 +69,7 @@ void mainMenu(){
 //DISPLAYS PROGRAM PROPER
 void secondMenu(){
 	printf("DEBT REPAYMENT PLANNER\n");
-	printf("\t[1] Input Monthly Income\n");
+	printf("\t[1] Update Monthly Income\n");
 	printf("\t[2] Add Debt Details\n");
 	printf("\t[3] View All Debts\n");
 	printf("\t[4] View Repayment Plan\n");
@@ -551,6 +551,7 @@ int main(){
 				else{
 					sleep(2.5);
                 	system("cls");
+                    monthlyIncomes();
 					goto Menu;
 				}
 			//CREATE NEW FILE
