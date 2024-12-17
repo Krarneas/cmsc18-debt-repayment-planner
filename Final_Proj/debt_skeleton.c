@@ -127,7 +127,7 @@ int readInteger2() {
 }
 
 
-//ERROR CATCHING
+//ERROR CATCHING MONTHLY INCOME
 int readInteger3() {
     char input[100]; // Buffer to hold the input
     int value;
@@ -168,6 +168,45 @@ int readInteger3() {
 }
 
 
+double readDouble(const char* prompt) {
+    char input[100]; // Buffer to hold the input
+    double value;
+
+    while (1) {
+        printf("%s", prompt); // Prompt for input
+        if (fgets(input, sizeof(input), stdin) != NULL) {
+            // Remove newline character if present
+            input[strcspn(input, "\n")] = 0;
+
+            // Check if the input is numeric
+            int isValid = 1; // Flag to check validity
+            for ( i = 0; input[i] != '\0'; i++) {
+                if (!isdigit(input[i]) && input[i] != '.' && input[i] != '-') {
+                    isValid = 0; // Set flag to false if a non-digit is found
+                    break;
+                }
+            }
+
+            if (isValid) {
+                value = atof(input); // Convert string to double
+                return value; // Return the valid double
+            } else {
+                red(); 
+                printf("Invalid Input! Please enter a valid number.\n");
+                reset(); 
+                sleep(1.5); // Use Sleep(1500) for Windows
+            }
+        } else {
+            // Handle input error
+            red();
+            printf("Error reading input! Try again.\n");
+            reset();
+            sleep(1.5);
+        }
+    }
+}
+
+
 //FUNCTION TO INPUT THE MONTHLY INCOME
 void monthlyIncome(){
 	income = readInteger3();
@@ -180,35 +219,31 @@ void monthlyIncome(){
 }
 
 
-
 //FUNCTION FOR ADDING DEBT
-void addDebt(){
-	rec debt;
-	
-	//Getting debt info
-	printf("INPUT DEBT DETAILS\n");
-    
+void addDebt() {
+    rec debt;
+
+    // Getting debt info
+    printf("INPUT DEBT DETAILS\n");
+
     // Reading the debt title (with spaces)
     printf("Debt Title: ");
     fgets(debt.title, sizeof(debt.title), stdin);
-    
     debt.title[strcspn(debt.title, "\n")] = '\0'; // Remove newline
-	
-	printf("Debt Amount: ");
-	scanf(" %lf", &debt.amount);
-	printf("Interest Rate (%%): ");
-	scanf(" %lf", &debt.intRate);
-	printf("Amount of payment (per Month): ");
-	scanf(" %lf", &debt.minPayment);
-	
-	//Adding Debt info in the global array
-	debtRecords[debtCount++] = debt;
-	
-	green();
-	printf("\nDebt #%d - %s has been added successfully!\n", debtCount, debt.title);
-	reset();
-	
-	goBack();	
+
+    // Use readDouble for numeric inputs
+    debt.amount = readDouble("Debt Amount: ");
+    debt.intRate = readDouble("Interest Rate (%%): ");
+    debt.minPayment = readDouble("Amount of payment (per Month): ");
+
+    // Adding Debt info in the global array
+    debtRecords[debtCount++] = debt;
+
+    green();
+    printf("\nDebt #%d - %s has been added successfully!\n", debtCount, debt.title);
+    reset();
+
+    goBack();
 }
 
 
