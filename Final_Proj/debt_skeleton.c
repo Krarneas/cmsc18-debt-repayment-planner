@@ -167,7 +167,7 @@ int readInteger3() {
     }
 }
 
-
+//ERROR CATHCING FOR ADDING DEBT
 double readDouble(const char* prompt) {
     char input[100]; // Buffer to hold the input
     double value;
@@ -319,7 +319,8 @@ void calculateRepaymentPlan(){
         months = months % 12;
         
         printf("Time to Payoff: %d years and %d months\n", year, months);
-        printf("Total Interest Paid: Php %.2f\n\n", totalDebtInt);
+        printf("Total Interest Paid: Php %.2f\n", totalDebtInt);
+        printf("______________________________________________________________\n\n");
 	}
 	
 	red();
