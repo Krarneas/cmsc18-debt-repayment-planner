@@ -155,6 +155,7 @@ int readInteger3() {
                 printf("Invalid Input! Try again.\n");
                 reset(); 
                 sleep(1.5); // Use Sleep(1500) for Windows
+                system("cls");
             }
         } else {
             // Handle input error
